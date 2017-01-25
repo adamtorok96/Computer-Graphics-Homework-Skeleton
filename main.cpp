@@ -98,13 +98,16 @@ void onExit() {
 void onDisplay() {
     glClearColor(0, 0, 0, 0);							// background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the screen
+
     fullScreenTexturedQuad.Draw();
+
     glutSwapBuffers();									// exchange the two buffers
 }
 
 // Key of ASCII code pressed
 void onKeyboard(unsigned char key, int pX, int pY) {
-    if (key == 'd') glutPostRedisplay();         // if d, invalidate display, i.e. redraw
+    if (key == 'd')
+        glutPostRedisplay();         // if d, invalidate display, i.e. redraw
 }
 
 // Key of ASCII code released

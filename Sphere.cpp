@@ -34,9 +34,9 @@ Hit Sphere::intersect(const Ray& ray) {
     double t = ((-1.0 * b - sqrt(d)) / (2.0 * a));
 
     Hit hit((float)t);
-    hit.position = ray.start + ray.dir * t;
-    hit.material = material;
-    hit.normal = (hit.position - center).normalize();
+    hit.position    = ray.start + ray.dir * t;
+    hit.material    = material;
+    hit.normal      = (hit.position - center).normalize();
 
     return hit;
 }

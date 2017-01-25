@@ -9,7 +9,6 @@
 class Sphere : public Intersectable {
     vec3 center;
     float radius;
-    Material *material;
 
 public:
     Hit intersect(const Ray& ray);
