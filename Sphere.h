@@ -3,13 +3,16 @@
 
 #include "Intersectable.h"
 #include "vec3.h"
-//#include "Ray.h"
+#include "Ray.h"
+#include "Material.h"
 
 class Sphere : public Intersectable {
     vec3 center;
     float radius;
+    Material *material;
+
 public:
-    //Hit intersect(const Ray& ray);
+    Hit intersect(const Ray& ray);
 };
 
 

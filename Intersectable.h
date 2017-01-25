@@ -3,12 +3,14 @@
 
 //#include "Material.h"
 #include "Hit.h"
-//#include "Ray.h"
+#include "Ray.h"
 
-struct Intersectable
-{
+#ifndef EPSILON
+#define EPSILON 0.0001
+
+struct Intersectable {
     //Material* material;
-    //virtual Hit intersect(const Ray& ray)=0;
+    virtual Hit intersect(const Ray& ray) = 0;
 };
 
 #endif //OPENGL_TEST_INTERSECTABLE_H
