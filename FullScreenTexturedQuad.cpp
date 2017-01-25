@@ -9,8 +9,11 @@ void FullScreenTexturedQuad::Create(vec4 image[WINDOW_WIDTH * WINDOW_HEIGHT]) {
 
     // vertex coordinates: vbo[0] -> Attrib Array 0 -> vertexPosition of the vertex shader
     glBindBuffer(GL_ARRAY_BUFFER, vbo); // make it active, it is an array
-    static float vertexCoords[] = { -1, -1,   1, -1,  -1, 1,
-                                    1, -1,   1,  1,  -1, 1 };	// two triangles forming a quad
+    static float vertexCoords[] = {
+            -0.8,     -0.8,     0.8,      -0.8,
+            -0.8,     0.8,      0.8,      -0.8,
+            0.8,      0.8,      -0.8,     0.8
+    };	// two triangles forming a quad
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexCoords), vertexCoords, GL_STATIC_DRAW);	   // copy to that part of the memory which is not modified
 
     // Map Attribute Array 0 to the current bound vertex buffer (vbo[0])

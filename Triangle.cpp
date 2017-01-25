@@ -14,6 +14,7 @@ void Triangle::Create() {
                  sizeof(vertexCoords),  // number of the vbo in bytes
                  vertexCoords,		   // address of the data array on the CPU
                  GL_STATIC_DRAW);	   // copy to that part of the memory which is not modified
+
     // Map Attribute Array 0 to the current bound vertex buffer (vbo[0])
     glEnableVertexAttribArray(0);
     // Data organization of Attribute Array 0
@@ -50,8 +51,10 @@ void Triangle::Draw(Camera &camera, unsigned int shaderProgram) {
 
     // set GPU uniform matrix variable MVP with the content of CPU variable MVPTransform
     int location = glGetUniformLocation(shaderProgram, "MVP");
-    if (location >= 0) glUniformMatrix4fv(location, 1, GL_TRUE, MVPTransform); // set uniform variable MVP to the MVPTransform
-    else printf("uniform MVP cannot be set\n");
+    if (location >= 0)
+        glUniformMatrix4fv(location, 1, GL_TRUE, MVPTransform); // set uniform variable MVP to the MVPTransform
+    else
+        printf("uniform MVP cannot be set\n");
 
     glBindVertexArray(vao);	// make the vao and its vbos active playing the role of the data source
     glDrawArrays(GL_TRIANGLES, 0, 3);	// draw a single triangle with vertices defined in vao

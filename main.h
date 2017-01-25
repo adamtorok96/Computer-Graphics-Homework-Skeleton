@@ -18,6 +18,7 @@
 #include <GL/freeglut.h>	// must be downloaded unless you have an Apple
 #endif
 
+#include "source.h"
 #include "vec4.h"
 #include "FullScreenTexturedQuad.h"
 
@@ -27,34 +28,6 @@ const unsigned int windowWidth = 600, windowHeight = 600;
 int majorVersion = 3, minorVersion = 0;
 
 unsigned int shaderProgram;
-
-// vertex shader in GLSL
-const char *vertexSource = R"(
-	#version 130
-    precision highp float;
-
-	in vec2 vertexPosition;		// variable input from Attrib Array selected by glBindAttribLocation
-	out vec2 texcoord;			// output attribute: texture coordinate
-
-	void main() {
-		texcoord = (vertexPosition + vec2(1, 1))/2;							// -1,1 to 0,1
-		gl_Position = vec4(vertexPosition.x, vertexPosition.y, 0, 1); 		// transform to clipping space
-	}
-)";
-
-// fragment shader in GLSL
-const char *fragmentSource = R"(
-	#version 130
-    precision highp float;
-
-	uniform sampler2D textureUnit;
-	in  vec2 texcoord;			// interpolated texture coordinates
-	out vec4 fragmentColor;		// output that goes to the raster memory as told by glBindFragDataLocation
-
-	void main() {
-		fragmentColor = texture(textureUnit, texcoord);
-	}
-)";
 
 int main(int argc, char * argv[]);
 void getErrorInfo(unsigned int handle);

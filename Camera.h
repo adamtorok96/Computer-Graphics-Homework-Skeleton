@@ -1,7 +1,9 @@
 #ifndef OPENGL_TEST_CAMERA_H
 #define OPENGL_TEST_CAMERA_H
 
+#include <cmath>
 #include "mat4.h"
+
 
 struct Camera {
     float x, y;	// center in world coordinates

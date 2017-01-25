@@ -1,4 +1,6 @@
 #include "main.h"
+#include "Camera.h"
+#include "Triangle.h"
 
 void getErrorInfo(unsigned int handle) {
     int logLen;
@@ -34,6 +36,8 @@ void checkLinking(unsigned int program) {
 
 // The virtual world: single quad
 FullScreenTexturedQuad fullScreenTexturedQuad;
+Camera camera;
+Triangle triangle;
 
 // Initialization, create an OpenGL context
 void onInitialization() {
@@ -46,7 +50,8 @@ void onInitialization() {
         }
     }
 
-    fullScreenTexturedQuad.Create( background );
+    //fullScreenTexturedQuad.Create( background );
+    triangle.Create();
 
     // Create vertex shader from string
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -97,17 +102,20 @@ void onInitialization() {
 
 void onExit() {
     glDeleteProgram(shaderProgram);
-    printf("exit");
+    printf("Exit");
 }
+
+static float rot = 0;
 
 // Window has become invalid: Redraw
 void onDisplay() {
     glClearColor(0, 0, 0, 0);							// background color
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the screen
 
-    fullScreenTexturedQuad.Draw();
+    ///fullScreenTexturedQuad.Draw();
+    triangle.Draw(camera, shaderProgram);
+    printf("rot: %f\n", rot);
 
-    glTranslatef(1, 0, 0);
     glutSwapBuffers();									// exchange the two buffers
 }
 
@@ -135,6 +143,7 @@ void onMouseMotion(int pX, int pY) {
 // Idle event indicating that some time elapsed: do animation here
 void onIdle() {
     long time = glutGet(GLUT_ELAPSED_TIME); // elapsed time since the start of the program
+    camera.Animate(rot++);
 }
 
 // Idaig modosithatod...
@@ -177,6 +186,7 @@ int main(int argc, char * argv[]) {
     glutMotionFunc(onMouseMotion);
 
     glutMainLoop();
+
     onExit();
     return 1;
 }

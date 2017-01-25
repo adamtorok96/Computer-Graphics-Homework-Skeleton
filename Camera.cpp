@@ -33,7 +33,7 @@ mat4 Camera::Pinv() { // inverse projection matrix
 }
 
 void Camera::Animate(float t) {
-    x = 0; // 10 * cosf(t);
+    x = 10 * cosf(t);
     y = 0;
     width = 20;
     height = 20;
