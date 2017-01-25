@@ -7,6 +7,7 @@
 
 #ifndef EPSILON
 #define EPSILON 0.0001
+#endif
 
 struct Intersectable {
     Material* material;

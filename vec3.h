@@ -11,21 +11,21 @@ public:
     vec3();
     vec3(float x, float y, float z);
 
-    vec3 operator*(float a);
-    vec3 operator/(float n);
+    vec3 operator*(float a) const;
+    vec3 operator/(float n) const;
 
-    vec3 operator+(const vec3& v);
-    vec3 operator-(const vec3& v);
-    vec3 operator*(const vec3& v);
+    vec3 operator+(const vec3& v) const;
+    vec3 operator-(const vec3& v) const;
+    vec3 operator*(const vec3& v) const;
 
     vec3& operator+=(const vec3& v);
     vec3& operator/=(float n);
 
-    float length();
-    float dot(const vec3& v);
+    float length() const;
+    float dot(const vec3& v) const;
 
-    vec3 normalize();
-    vec3 cross(const vec3& v);
+    vec3 normalize() const;
+    vec3 cross(const vec3& v) const;
 };
 
 

@@ -45,6 +45,7 @@ void onInitialization() {
             background[y * windowWidth + x] = vec4((float)x / windowWidth, (float)y / windowHeight, 0, 1);
         }
     }
+
     fullScreenTexturedQuad.Create( background );
 
     // Create vertex shader from string
@@ -53,8 +54,10 @@ void onInitialization() {
         printf("Error in vertex shader creation\n");
         exit(1);
     }
+
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
     glCompileShader(vertexShader);
+
     checkShader(vertexShader, (char *) "Vertex shader error");
 
     // Create fragment shader from string
@@ -63,8 +66,10 @@ void onInitialization() {
         printf("Error in fragment shader creation\n");
         exit(1);
     }
+
     glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShader);
+
     checkShader(fragmentShader, (char *) "Fragment shader error");
 
     // Attach shaders to a single program
@@ -73,6 +78,7 @@ void onInitialization() {
         printf("Error in shader program creation\n");
         exit(1);
     }
+
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
 
@@ -101,6 +107,7 @@ void onDisplay() {
 
     fullScreenTexturedQuad.Draw();
 
+    glTranslatef(1, 0, 0);
     glutSwapBuffers();									// exchange the two buffers
 }
 

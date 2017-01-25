@@ -1,13 +1,13 @@
 #include "SmoothMaterial.h"
 
 vec3 SmoothMaterial::reflect(vec3 inDir, vec3 normal) {
-    return inDir - normal * dot(normal, inDir) * 2.0f;
+    return inDir - normal * normal.dot(inDir) * 2.0f;
 }
 
 vec3 SmoothMaterial::refract(vec3 inDir, vec3 normal) {
     float ior = n;
 
-    float cosa = -dot(normal, inDir);
+    float cosa = - normal.dot(inDir);
 
     if (cosa < 0) {
         cosa = -cosa;
@@ -24,7 +24,7 @@ vec3 SmoothMaterial::refract(vec3 inDir, vec3 normal) {
 }
 
 vec3 SmoothMaterial::Fresnel(vec3 inDir, vec3 normal) { // közelítés
-    float cosa = (float) fabs(dot(normal, inDir));
+    float cosa = (float) fabs(normal.dot(inDir));
 
     return F0 + (vec3(1, 1, 1) - F0) * pow(1-cosa, 5);
 }
