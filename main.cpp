@@ -1,6 +1,5 @@
 #include "main.h"
-#include "Camera.h"
-#include "Triangle.h"
+
 
 void getErrorInfo(unsigned int handle) {
     int logLen;
@@ -113,10 +112,64 @@ void onDisplay() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the screen
 
     ///fullScreenTexturedQuad.Draw();
-    triangle.Draw(camera, shaderProgram);
+    triangle.draw(camera, shaderProgram);
     printf("rot: %f\n", rot);
 
     glutSwapBuffers();									// exchange the two buffers
+}
+
+
+Hit firstIntersect(Ray ray) {
+    Hit bestHit;
+
+    /*
+    for(Intersectable * obj : objects) {
+        Hit hit = obj->intersect(ray); //  hit.t < 0 if no intersection
+
+        if(hit.t > 0 && (bestHit.t < 0 || hit.t < bestHit.t))
+            bestHit = hit;
+    }*/
+
+    return bestHit;
+}
+
+vec3 trace(Ray ray, int depth) {
+    // TODO: get out of it..
+#define maxdepth 10
+#define La vec3(1, 1, 1)
+
+    if (depth > maxdepth)
+        return La;
+
+    Hit hit = firstIntersect(ray);
+
+    if(hit.t < 0)
+        return La; // nothing
+
+    vec3 outRadiance = La * hit.material->getKa();
+
+    /*
+    for(each light source l){
+        Ray shadowRay(r + N sign(NV), Ll);
+        Hit shadowHit = firstIntersect(shadowRay);
+        if(shadowHit.t < 0 || shadowHit.t > |r - yl| )
+            outRadiance += hit.material->shade(N, V, Ll, Lel);
+    }
+    */
+    /*
+    if( hit.material->isReflective() ){
+        vec3 reflectionDir = hit.material->reflect(-V,N);
+        Ray reflectedRay(r + N sign(NV), reflectionDir);
+        outRadiance += trace(reflectedRay,depth+1)*F(V,N);
+    }
+
+    if(hit.material->isRefractive()) {
+        vec3 refractionDir = hit.material->refract(-V,N);
+        Ray refractedRay(r - N sign(NV), refractionDir);
+        outRadiance += trace(refractedRay,depth+1)*(vec3(1,1,1)-F(V,N));
+    }*/
+
+    return outRadiance;
 }
 
 // Key of ASCII code pressed
@@ -164,7 +217,7 @@ int main(int argc, char * argv[]) {
     glutCreateWindow(argv[0]);
 
 #if !defined(__APPLE__)
-    glewExperimental = true;	// magic
+    glewExperimental = GL_TRUE;	// magic
     glewInit();
 #endif
 

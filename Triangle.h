@@ -7,8 +7,9 @@
 
 #include "mat4.h"
 #include "Camera.h"
+#include "Object.h"
 
-class Triangle {
+class Triangle : public Object {
     unsigned int vao;	// vertex array object id
     float sx, sy;		// scaling
     float wTx, wTy;		// translation
@@ -18,9 +19,9 @@ public:
         Animate(0);
     }
 
-    void Create();
-    void Animate(float t);
-    void Draw(Camera &camera, unsigned int shaderProgram);
+    void create();
+    void animate(float t);
+    void draw(Camera &camera, unsigned int shaderProgram);
 };
 
 

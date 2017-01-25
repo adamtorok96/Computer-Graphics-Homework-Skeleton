@@ -19,8 +19,16 @@
 #endif
 
 #include "source.h"
+#include "vec3.h"
 #include "vec4.h"
+#include "Ray.h"
+#include "Hit.h"
+#include "Intersectable.h"
+
+
 #include "FullScreenTexturedQuad.h"
+#include "Camera.h"
+#include "Triangle.h"
 
 const unsigned int windowWidth = 600, windowHeight = 600;
 
@@ -30,6 +38,7 @@ int majorVersion = 3, minorVersion = 0;
 unsigned int shaderProgram;
 
 int main(int argc, char * argv[]);
+
 void getErrorInfo(unsigned int handle);
 void checkShader(unsigned int shader, char * message);
 void checkLinking(unsigned int program);
@@ -41,5 +50,8 @@ void onKeyboardUp(unsigned char key, int pX, int pY);
 void onMouse(int button, int state, int pX, int pY);
 void onMouseMotion(int pX, int pY);
 void onIdle();
+
+Hit firstIntersect(Ray ray);
+vec3 trace(Ray ray, int depth);
 
 #endif //OPENGL_TEST_MAIN_H
