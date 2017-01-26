@@ -1,7 +1,15 @@
 #include "Triangle.h"
 
-void Triangle::Create() {
-    glGenVertexArrays(1, &vao);	// create 1 vertex array object
+Triangle::Triangle(vec3 a, vec3 b, vec3 c, vec3 color) {
+    this->a = a;
+    this->b = b;
+    this->c = c;
+    this->color = color;
+}
+
+void Triangle::create() {
+    Object::create();
+
     glBindVertexArray(vao);		// make it active
 
     unsigned int vbo[2];		// vertex buffer objects
@@ -9,7 +17,13 @@ void Triangle::Create() {
 
     // vertex coordinates: vbo[0] -> Attrib Array 0 -> vertexPosition of the vertex shader
     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); // make it active, it is an array
-    static float vertexCoords[] = { -8, -8, -6, 10, 8, -2 };	// vertex data on the CPU
+
+    float vertexCoords[] = {
+            a.x, a.y, a.z,
+            b.x, b.y, b.z,
+            c.x, c.y, c.z
+    };
+
     glBufferData(GL_ARRAY_BUFFER,      // copy to the GPU
                  sizeof(vertexCoords),  // number of the vbo in bytes
                  vertexCoords,		   // address of the data array on the CPU
@@ -19,13 +33,18 @@ void Triangle::Create() {
     glEnableVertexAttribArray(0);
     // Data organization of Attribute Array 0
     glVertexAttribPointer(0,			// Attribute Array 0
-                          2, GL_FLOAT,  // components/attribute, component type
+                          3, GL_FLOAT,  // components/attribute, component type
                           GL_FALSE,		// not in fixed point format, do not normalized
                           0, NULL);     // stride and offset: it is tightly packed
 
     // vertex colors: vbo[1] -> Attrib Array 1 -> vertexColor of the vertex shader
     glBindBuffer(GL_ARRAY_BUFFER, vbo[1]); // make it active, it is an array
-    static float vertexColors[] = { 1, 0, 0, 0, 1, 0, 0, 0, 1 };	// vertex data on the CPU
+    //static float vertexColors[] = { 1, 1, 1, 0, 1, 1, 1, 0, 1 };	// vertex data on the CPU
+    float vertexColors[] = {
+            color.x, color.y, color.z,
+            color.x, color.y, color.z,
+            color.x, color.y, color.z
+    };
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexColors), vertexColors, GL_STATIC_DRAW);	// copy to the GPU
 
     // Map Attribute Array 1 to the current bound vertex buffer (vbo[1])
@@ -34,28 +53,71 @@ void Triangle::Create() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL); // Attribute Array 1, components/attribute, component type, normalize?, tightly packed
 }
 
-void Triangle::Animate(float t) {
-    sx = 1; // *sinf(t);
-    sy = 1; // *cosf(t);
-    wTx = 0; // 4 * cosf(t / 2);
-    wTy = 0; // 4 * sinf(t / 2);
-}
-
-void Triangle::Draw(Camera &camera, unsigned int shaderProgram) {
-    mat4 M(sx, 0, 0, 0,
-           0, sy, 0, 0,
-           0, 0, 0, 0,
-           wTx, wTy, 0, 1); // model matrix
-
-    mat4 MVPTransform = M * camera.V() * camera.P();
-
-    // set GPU uniform matrix variable MVP with the content of CPU variable MVPTransform
-    int location = glGetUniformLocation(shaderProgram, "MVP");
-    if (location >= 0)
-        glUniformMatrix4fv(location, 1, GL_TRUE, MVPTransform); // set uniform variable MVP to the MVPTransform
-    else
-        printf("uniform MVP cannot be set\n");
+void Triangle::draw(Camera &camera, unsigned int shaderProgram) {
+    transform(camera, shaderProgram);
 
     glBindVertexArray(vao);	// make the vao and its vbos active playing the role of the data source
     glDrawArrays(GL_TRIANGLES, 0, 3);	// draw a single triangle with vertices defined in vao
+}
+
+void Triangle::animate(float t) {
+    //sx = 1; // *sinf(t);
+    //sy = 1; // *cosf(t);
+    //wTx = 0; // 4 * cosf(t / 2);
+    //wTy = 0; // 4 * sinf(t / 2);
+}
+
+void Triangle::control() {
+
+}
+
+Hit Triangle::intersect(const Ray &ray) {
+    Hit hit(-1);
+
+    //Find vectors for two edges sharing V1
+    vec3 e1 = b - a;
+    vec3 e2 = c - a;
+
+    //Begin calculating determinant - also used to calculate u parameter
+    vec3 P = ray.dir.cross(e2);
+
+    //if determinant is near zero, ray lies in plane of triangle or ray is parallel to plane of triangle
+    float det = e1.dot(P);
+
+    //NOT CULLING
+    if(det > -EPSILON && det < EPSILON)
+        return hit;
+
+    float inv_det = 1.f / det;
+
+    //calculate distance from V1 to ray origin
+    vec3 T = ray.start.cross(a);
+
+    //Calculate u parameter and test bound
+    float u = T.dot(P) * inv_det;
+
+    //The intersection lies outside of the triangle
+    if(u < 0.f || u > 1.f)
+        return hit;
+
+    //Prepare to test v parameter
+    vec3 Q = T.cross(e1);
+
+    //Calculate V parameter and test bound
+    float v = ray.dir.dot(Q) * inv_det;
+
+    //The intersection lies outside of the triangle
+    if(v < 0.f || u + v  > 1.f)
+        return hit;
+
+    float t = e2.dot(Q) * inv_det;
+
+    if(t > EPSILON) { //ray intersection
+        hit.t = t;
+        hit.position = ray.start + ray.dir * t;
+        hit.normal = ray.dir * (-1);
+    }
+
+    // No hit, no win
+    return hit;
 }

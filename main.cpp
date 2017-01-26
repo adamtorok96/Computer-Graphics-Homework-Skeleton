@@ -3,11 +3,15 @@
 
 void getErrorInfo(unsigned int handle) {
     int logLen;
+
     glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &logLen);
+
     if (logLen > 0) {
         char * log = new char[logLen];
         int written;
+
         glGetShaderInfoLog(handle, logLen, &written, log);
+
         printf("Shader log:\n%s", log);
         delete log;
     }
@@ -16,7 +20,9 @@ void getErrorInfo(unsigned int handle) {
 // check if shader could be compiled
 void checkShader(unsigned int shader, char * message) {
     int OK;
+
     glGetShaderiv(shader, GL_COMPILE_STATUS, &OK);
+
     if (!OK) {
         printf("%s!\n", message);
         getErrorInfo(shader);
@@ -26,7 +32,9 @@ void checkShader(unsigned int shader, char * message) {
 // check if shader could be linked
 void checkLinking(unsigned int program) {
     int OK;
+
     glGetProgramiv(program, GL_LINK_STATUS, &OK);
+
     if (!OK) {
         printf("Failed to link shader program!\n");
         getErrorInfo(program);
@@ -36,21 +44,15 @@ void checkLinking(unsigned int program) {
 // The virtual world: single quad
 FullScreenTexturedQuad fullScreenTexturedQuad;
 Camera camera;
-Triangle triangle;
+Triangle triangle(vec3(-8, -8, -8), vec3(-6, 10, 5), vec3(8, -2, 0), vec3(1, 0, 0));
+Triangle triangle2(vec3(-4, -6, -10), vec3(-3, 0, 0), vec3(0, 0, 0), vec3(0, 1, 0));
 
 // Initialization, create an OpenGL context
 void onInitialization() {
     glViewport(0, 0, windowWidth, windowHeight);
 
-    static vec4 background[windowWidth * windowHeight];
-    for (int x = 0; x < windowWidth; x++) {
-        for (int y = 0; y < windowHeight; y++) {
-            background[y * windowWidth + x] = vec4((float)x / windowWidth, (float)y / windowHeight, 0, 1);
-        }
-    }
-
-    //fullScreenTexturedQuad.Create( background );
-    triangle.Create();
+    triangle.create();
+    triangle2.create();
 
     // Create vertex shader from string
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -113,6 +115,8 @@ void onDisplay() {
 
     ///fullScreenTexturedQuad.Draw();
     triangle.draw(camera, shaderProgram);
+    triangle2.draw(camera, shaderProgram);
+
     printf("rot: %f\n", rot);
 
     glutSwapBuffers();									// exchange the two buffers

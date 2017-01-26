@@ -38,3 +38,11 @@ void Camera::Animate(float t) {
     width = 20;
     height = 20;
 }
+
+vec3 Camera::getEyePosition() {
+    return vec3();
+}
+
+vec3 Camera::getEyeDirection() {
+    return vec3();
+}

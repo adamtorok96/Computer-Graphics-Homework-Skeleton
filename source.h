@@ -42,13 +42,14 @@ const char *vertexSource = R"(
 
 	uniform mat4 MVP;			// Model-View-Projection matrix in row-major format
 
-	in vec2 vertexPosition;		// variable input from Attrib Array selected by glBindAttribLocation
+    // vec2 --> vec3
+	in vec3 vertexPosition;		// variable input from Attrib Array selected by glBindAttribLocation
 	in vec3 vertexColor;	    // variable input from Attrib Array selected by glBindAttribLocation
 	out vec3 color;				// output attribute
 
 	void main() {
 		color = vertexColor;														// copy color from input to output
-		gl_Position = vec4(vertexPosition.x, vertexPosition.y, 0, 1) * MVP; 		// transform to clipping space
+		gl_Position = vec4(vertexPosition.x, vertexPosition.y, vertexPosition.z, 1) * MVP; 		// transform to clipping space
 	}
 )";
 
